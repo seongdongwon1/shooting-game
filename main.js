@@ -16,10 +16,10 @@ let backgroundImage, spaceShipImage, bulletImage, enemyImage, gaveOverImage
 /**
  * space ship  좌표
  */
-let spaceShipX = canvas.width / 2 -32
+let spaceShipX = canvas.width / 2 - 32
 let spaceShipY = canvas.height - 64
 
-function getImages () {
+function getImages() {
     backgroundImage = new Image()
     backgroundImage.src = 'images/background.jpeg'
 
@@ -37,19 +37,41 @@ function getImages () {
 }
 
 let keysDown = {}
-function setupKeyboardListener () {
+function setupKeyboardListener() {
     document.addEventListener('keydown', (e) => {
         keysDown[e.keyCode] = true
         console.log('z', keysDown)
     })
+    document.addEventListener('keyup', (e) => {
+        delete keysDown[e.keyCode]
+    })
 }
 
-function render () {
+function update() {
+    // 우주선의 속도
+    if (39 in keysDown) { //right
+        spaceShipX += 5
+    }
+    if (37 in keysDown) { //left
+        spaceShipX -= 5
+    }
+
+    // 경기장 밖으로 안나가게.
+    if (spaceShipX <= 0) {
+        spaceShipX = 0
+    }
+    if (spaceShipX >= canvas.width - 64) {
+        spaceShipX = canvas.width - 64
+    }
+}
+
+function render() {
     ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height)
     ctx.drawImage(spaceShipImage, spaceShipX, spaceShipY)
 }
 
-function main () {
+function main() {
+    update()
     render()
     requestAnimationFrame(main)
 }
